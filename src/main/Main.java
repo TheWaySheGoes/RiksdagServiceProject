@@ -46,6 +46,10 @@ public class Main implements Runnable{
 	
 	//TODO simple on off buttons GUI + while loop + timeintervall pause + fileFolder
 
+	/**
+	 * works in IDE or when compiled, it works in console with argument JUMBO or BULK
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		System.out.println("arg:  DataType.[ JUMBO | BULK ]");
 		if(args.length==0) {
