@@ -46,23 +46,23 @@ public class Main implements Runnable{
 	
 	//TODO simple on off buttons GUI + while loop + timeintervall pause + fileFolder
 
-//	public static void main(String[] args) {
-//		System.out.println("arg:  DataType.[ JUMBO | BULK ]");
-//		if(args[0]=="JUMBO") {
-//			Thread t = new Thread(new Main(DataType.JUMBO));
-//			t.start();	
-//		}else if(args[0]=="BULK") {
-//			Thread t1 = new Thread(new Main(DataType.BULK));
-//			t1.start();		
-//		}
-//	}
-	
 	public static void main(String[] args) {
-		Thread t = new Thread(new Main(DataType.JUMBO));
-		t.start();
-		Thread t1 = new Thread(new Main(DataType.BULK));
-		t1.start();	
+		System.out.println("arg:  DataType.[ JUMBO | BULK ]");
+		if(args.length==0) {
+			Thread t = new Thread(new Main(DataType.JUMBO));
+			t.start();
+			Thread t1 = new Thread(new Main(DataType.BULK));
+			t1.start();	
+		}else if(args[0]=="JUMBO") {
+			Thread t = new Thread(new Main(DataType.JUMBO));
+			t.start();	
+		}else if(args[0]=="BULK") {
+			Thread t1 = new Thread(new Main(DataType.BULK));
+			t1.start();		
+		}
 	}
+	
+	
 	
 
 	@Override
