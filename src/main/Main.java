@@ -16,8 +16,20 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
+ * This Module can do 2 things.
+ * 1. Get all data at once from riksdags api called Jumbo,
+ * and write it to the disk as json file.
+ * 2. Get data for a given name from jumbo.json file. 
+ * This is called Bulk because names are taken from jumbo.json file one by one,
+ * and all json files for everyone are created in one go.
  * To run this initiate an Object with one of commands : JUMBO or BULK.
- * This is designed to do one of the commands in a thread and pause;
+ * (or just run it without commands)
+ * This is designed to do every one of the commands in a thread and pause;
+ * the idea is to call JUMBO once a month for example, and then generate 
+ * jsons for everyone. Those personal json files could be accessed later, often,
+ * without overloading the server.
+ * 
+ * //TODO simple on off buttons GUI + while loop + timeintervall pause
  * 
  * @author lukas
  *
@@ -44,7 +56,7 @@ public class Main implements Runnable{
 		this.command=command;
 	}
 	
-	//TODO simple on off buttons GUI + while loop + timeintervall pause + fileFolder
+	
 
 	/**
 	 * works in IDE or when compiled, it works in console with argument JUMBO or BULK
@@ -53,16 +65,16 @@ public class Main implements Runnable{
 	public static void main(String[] args) {
 		System.out.println("arg:  DataType.[ JUMBO | BULK ]");
 		if(args.length==0) {
-			Thread t = new Thread(new Main(DataType.JUMBO));
-			t.start();
-			Thread t1 = new Thread(new Main(DataType.BULK));
-			t1.start();	
+			Thread jumboThread = new Thread(new Main(DataType.JUMBO));
+			jumboThread.start();
+			Thread bulkThread = new Thread(new Main(DataType.BULK));
+			bulkThread.start();	
 		}else if(args[0]=="JUMBO") {
-			Thread t = new Thread(new Main(DataType.JUMBO));
-			t.start();	
+			Thread jumboThread= new Thread(new Main(DataType.JUMBO));
+			jumboThread.start();	
 		}else if(args[0]=="BULK") {
-			Thread t1 = new Thread(new Main(DataType.BULK));
-			t1.start();		
+			Thread bulkThread = new Thread(new Main(DataType.BULK));
+			bulkThread.start();		
 		}
 	}
 	
@@ -83,7 +95,7 @@ public class Main implements Runnable{
 	}
 
 	/**
-	 * fetching people one by one from jumbo.json file and making files for everyone
+	 * fetching people one by one from jumbo.json file and making files for everyone.
 	 * jumbo.json should be fetched and made first with getJumbo() and writeJumbo();
 	 * 
 	 * @param data
@@ -103,6 +115,7 @@ public class Main implements Runnable{
 			String[] efternamn = person.getString("efternamn").split(" ");
 			String sorteringsnamn = person.getString("sorteringsnamn");
 			
+			//allot of ifs BUT constant complexity
 			if(efternamn.length==1) {
 				if(tilltalsnamn.length==1) {
 					System.out.println(tilltalsnamn[0]+" "+efternamn[0]);
@@ -170,7 +183,7 @@ public class Main implements Runnable{
 	}
 	
 	/**
-	 * gets bulk info from Riksdag Api
+	 * gets all "Jumbo" data from Riksdag Api
 	 * @return
 	 */
 	private String getJumbo() {
@@ -232,8 +245,8 @@ public class Main implements Runnable{
 	}
 	
 	/**
-	 * returns a json string for a given person from api
-	 * 
+	 * returns a json Data for a given person from riksdag api
+	 * not used in automation. NOT EFFICIENT to download people one by one
 	 * @param fName
 	 * @param lName
 	 * @return
@@ -278,7 +291,7 @@ public class Main implements Runnable{
 	}
 
 	/**
-	 * makes a json file for a specific person
+	 * makes a json file for a specific person and writes it to the disk
 	 * 
 	 * @param firstName
 	 * @param lastName
